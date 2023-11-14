@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 void inc(int *x){
-    (*x)++;
+    *x = *x +1;
 }
 
 int x;
