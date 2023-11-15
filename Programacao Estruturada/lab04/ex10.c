@@ -26,11 +26,19 @@ void matriz_print(int ** mat, int n, int m){
     }
 }
 
+void matriz_free(int ** mat, int n, int m){
+    for (int i=0;i<n;i++){
+        free(mat[i]);
+    }
+    free(mat);
+}
+
 int n,m;
 int main() {
     scanf("%d",&n);
     scanf("%d",&m);
     int **mat = matriz_le(n,m);
     matriz_print(mat,n,m);
+    matriz_free(mat,n,m);
     return 0;
 }

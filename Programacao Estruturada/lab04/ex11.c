@@ -1,36 +1,68 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int ** matriz_le(int n, int m) {
-    int i = 0, j=0;
-    int ** mat = malloc(n*sizeof(int));
-    for (i=0;i<m;i++){
-        mat[i] = malloc(m * sizeof(int));
-    }
-    printf("Entre com os dados\n");
-    for (i=0;i<n;i++){
-        for (j=0;j<m;j++){
-            scanf("%d",&mat[i][j]);
-        }
-    }
-    return mat;
+typedef struct {
+int* data;
+int capacity; // capacidade do 'array' data
+int nelements; // número de elementos guardados em data
+}* VectorInt;
+
+VectorInt* vectorint(void){
+    VectorInt v;
+    VectorInt *p = &v;
+    v->data = malloc(1*sizeof(VectorInt));
+    v->capacity = 1;
+    v->nelements = 0;
+    return p;
 }
 
-void matriz_print(int ** mat, int n, int m){
-    int i = 0, j=0;
-    for (i=0;i<n;i++){
-        for (j=0;j<m;j++){
-            printf("%d",mat[i][j]);
+void vectorint_insert(VectorInt v, int a){
+    int x;
+    if (v->capacity > v->nelements){
+        v->data[v->nelements] = scanf("%d",&x);
+        v->nelements++;
+    }
+    else{
+        v->capacity = v->capacity * 2;
+        v->data = realloc(v->data,v->capacity * sizeof(int));
+        v->data[v->nelements] = scanf("%d",&x);
+    }
+
+}
+
+void vectorint_remove(VectorInt v, int a){
+    int i = 0;
+    for (i=0;i<v->capacity;i++){
+        if (v->data[i]==a){
+            v->data[i] = NULL;
         }
-        printf("\n");
     }
 }
 
-int n,m;
+int vectorint_at(VectorInt v, int i){
+    return v->data[i];
+}
+
+void vectorint_print_elements(VectorInt v, int i){
+    int i = 0;
+    for (i=0;i<v->capacity;i++){
+        printf("%d",v->data[i]);
+    }
+}
+
+void vectorint_status(VectorInt v){
+    printf("Status do vertor:\n");
+    printf("Capacidade: %d\n",v->capacity);
+    printf("Numero de Elementos: %d\n",v->nelements);
+}
+
+void vectorint_free(VectorInt v) {
+    free(v->data);
+    free(v);
+}
+
+int n;
 int main() {
-    scanf("%d",&n);
-    scanf("%d",&m);
-    int **mat = matriz_le(n,m);
-    matriz_print(mat,n,m);
+    VectorInt *v = vectorint();
     return 0;
 }
