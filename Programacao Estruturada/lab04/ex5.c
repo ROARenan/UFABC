@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void inc(int *x){
-    *x = *x +1;
+void inc(int *xa){
+    *xa = *xa +1;
 }
 
 int x;

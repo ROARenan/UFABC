@@ -1,27 +1,42 @@
 #include <stdio.h>
-//#include <string.h>
+#include <stdlib.h>
 
-char* strcat(char* a, char* b) {
-    int i = 0, j = 0;
-
-    while (a[i] != '\0') {
-        i++;
+int* cartesiano(int **a, int na, int **b, int nb){
+    int i, j, n, **v;
+    n = na + nb;
+    for (i=0;i<n;i++){
+        for (j=0;j<2;j++){
+            v[i] = malloc(n *  sizeof(int));
+        }
     }
+    for (i=0;i<n;i++){
 
-    while (b[j] != '\0') {
-        a[i++] = b[j++];
     }
-
-    a[i] = '\0';
-
-    return a;
+    
+    return v;
 }
 
-int main() {
-    char a[50] = "Teste de frase, ";
-    char b[50] = "para verificar o programa";
+int main(){
+    int i;
+    int *a = (int*) malloc(3 * sizeof(int));
+    a[0] = 5;
+    a[1] = 6;
+    a[2] = 7;
 
-    printf("Nova string %s\n", strcat(a, b));
+    int *b = (int*) malloc(4 * sizeof(int));
+    b[0] = 1;
+    b[1] = 2;
+    b[2] = 0;
+    b[3] = 8;
 
+    swap(&a, &b);
+    for (i=0;i<3;i++){
+        printf("%d, ",a[i]);
+    }
+    for (i=0;i<4;i++){
+        printf("%d, ",b[i]);
+    }
+    free(a);
+    free(b);
     return 0;
 }
