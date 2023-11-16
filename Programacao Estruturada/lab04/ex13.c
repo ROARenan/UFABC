@@ -15,12 +15,13 @@ char aluno_cmp(Aluno *a, Aluno *b){
             if ((*a)->nome[i] != (*b)->nome[i]){
                 return 0;
             }
+            i++;
         }
         return 1;
     }
 }
 
 int main(){
-    
+
     return 0;
 }
