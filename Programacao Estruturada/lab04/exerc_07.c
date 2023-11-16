@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char* my_strcat(char* a, char* b) {
+char* strcat(char* a, char* b) {
     int i = 0, j = 0, k = 0;
 
     while (a[i] != '\0') {
@@ -13,6 +13,7 @@ char* my_strcat(char* a, char* b) {
     }
 
     char * c = malloc((i + j + 1) * sizeof(char));
+    
     i = 0;
     while (a[i] != '\0') {
         c[k] = a[i];
@@ -35,7 +36,7 @@ int main() {
     char a[] = "Frase ";
     char b[] = "Ola";
 
-    printf("Nova string %s\n", my_strcat(a, b));
+    printf("Nova string %s\n", strcat(a, b));
     printf("%s\n",a);
 
     return 0;
