@@ -1,27 +1,42 @@
 #include <stdio.h>
-//#include <string.h>
+#include <stdlib.h>
 
-char* strcat(char* a, char* b) {
-    int i = 0, j = 0;
+char* my_strcat(char* a, char* b) {
+    int i = 0, j = 0, k = 0;
 
     while (a[i] != '\0') {
         i++;
     }
 
     while (b[j] != '\0') {
-        a[i++] = b[j++];
+        j++;
     }
 
-    a[i] = '\0';
+    char * c = malloc((i + j + 1) * sizeof(char));
+    i = 0;
+    while (a[i] != '\0') {
+        c[k] = a[i];
+        i++;
+        k++;
+    }
 
-    return a;
+    j = 0;
+    while (b[j] != '\0') {
+        c[k] = b[j];
+        j++;
+        k++;
+    }
+
+    c[k] = '\0';
+    return c;
 }
 
 int main() {
-    char a[50] = "Teste de frase, ";
-    char b[50] = "para verificar o programa";
+    char a[] = "Frase ";
+    char b[] = "Ola";
 
-    printf("Nova string %s\n", strcat(a, b));
+    printf("Nova string %s\n", my_strcat(a, b));
+    printf("%s\n",a);
 
     return 0;
 }
