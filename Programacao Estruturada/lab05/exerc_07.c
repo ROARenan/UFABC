@@ -12,7 +12,7 @@ int binomio_newton(int n, int k){
     if (n >= 0 && k >= 0 && n >= k) {
         return fatorial(n) / (fatorial(k) * fatorial(n - k));
     } else {
-        return 0;  // Tratar casos inválidos
+        return 0;
     }
 }
 
@@ -24,7 +24,7 @@ int main(){
     scanf("%d", &k);
 
     if (n < k) {
-        printf("Erro: n deve ser maior ou igual a k.\n");
+        printf("n < k\n");
     } else {
         printf("%d\n", binomio_newton(n, k));
     }
