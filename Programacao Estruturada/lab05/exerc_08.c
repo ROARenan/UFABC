@@ -1,3 +1,5 @@
+//Renan Santana RA: 11202131332
+
 #include <stdio.h>
 
 void combinations(int arr[], int data[], int start, int end, int index, int r) {
