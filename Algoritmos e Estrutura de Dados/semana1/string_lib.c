@@ -3,6 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+struct Matriz {
+int rows;
+int cols;
+double* data;
+};
+
 String *string_create(char *data, int length)
 {
     String *str = malloc(sizeof(String));

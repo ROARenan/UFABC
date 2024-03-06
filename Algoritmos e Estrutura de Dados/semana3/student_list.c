@@ -172,18 +172,26 @@ void list_incrementGrades(StudentList *list, float amount)
 
 float list_averageGrade(StudentList *list)
 {
+    if (list == NULL || list->head == NULL)
+        return 0;
+
     Node *cur = list->head;
     int i = 0;
-    float mean = 0;
+    float med = 0;
 
-    while (cur->next != NULL)
+    while (cur != NULL)
     {
-        mean = mean + cur->student->grade;
-        cur = cur->next;
+        med = med + cur->student->grade;
         i++;
+        cur = cur->next;
     }
-    //mean = mean + cur->student->grade;
-    return mean / (i + 1);
+
+    if (i == 0)
+    {
+        return 0;
+    }
+
+    return (med / i);
 }
 
 StudentList *list_filterFailed(StudentList *list)
