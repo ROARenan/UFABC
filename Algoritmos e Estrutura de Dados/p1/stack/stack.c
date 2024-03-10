@@ -90,3 +90,25 @@ void stack_print(Stack* stack) {
 
     printf("\n");
 }
+
+Stack* stack_copy(Stack* s){
+    Stack *new = stack_create();
+    Stack *hold = stack_create();
+    Node *cur = s->top;
+
+    while (cur  != NULL)
+    {
+            stack_push(hold, cur->value);
+            cur = cur->next;
+    }
+
+    cur = hold->top;
+    while (cur  != NULL)
+    {
+            stack_push(new, cur->value);
+            cur = cur->next;
+    }
+
+    stack_destroy(hold);
+    return new;
+}
