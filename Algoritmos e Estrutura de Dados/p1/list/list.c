@@ -213,24 +213,26 @@ void list_removeDuplicates(List *l)
     }
 }
 
-void list_printReverse(List* l){
-    Node * cur = l->head;
-    Node * last;
-
-    while (cur != NULL){
+void list_printReverse(List* l) {
+    Node* cur = l->head;
+    Node* last = NULL;
+    
+    while (cur->next != NULL) {
+        last = cur;
         cur = cur->next;
     }
-    last = cur;
-    cur = l->head;
 
-    while(cur != last){
-        if (cur->next == last){
-            element_print(last->value);
-            last = cur;
-            cur = l->head;
-        }
-        else{
-            cur = cur->next;
+    while (last != NULL) {
+        element_print(cur->value);
+        printf(">> ");
+        if (last != l->head) {
+            cur = last;
+            last = l->head;
+            while (last->next != cur) {
+                last = last->next;
+            }
+        } else {
+            break;
         }
     }
 }
