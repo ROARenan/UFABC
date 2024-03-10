@@ -15,6 +15,11 @@ struct Queue {
     int size;
 };
 
+struct Stack {
+    Node* top;
+    int size;
+};
+
 Queue* queue_create() {
     Queue* queue = malloc(sizeof(Queue));
 
@@ -98,5 +103,31 @@ void queue_print(Queue* queue) {
 }
 
 Queue* reverse(Stack* s){
-    
+    Node* cur = s->top;
+    Queue *new = queue_create();
+
+    while (cur != NULL){
+        queue_enqueue(new, cur->element);
+        cur = cur->next;
+    }
+
+    return new;
+}
+
+bool queue_equals(Queue* q1, Queue* q2){
+    Node *cur1 = q1->front;
+    Node *cur2 = q2->front;
+
+    if (q1->size != q2->size){
+        return false;
+    }
+
+    while (cur1 != NULL){
+        if (cur1->element != cur2->element){
+            return false;
+        }
+        cur1 = cur1->next;
+        cur2 = cur2->next;
+    }
+    return true;
 }
