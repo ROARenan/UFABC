@@ -124,39 +124,113 @@ int list_isSorted(List *l)
     int last = cur->value;
     int is_asc = 0;
     int is_desc = 0;
+    printf("Ascending:\n");
     while (cur != NULL)
     {
-        if (last < cur->value)
-        {
-            is_asc = 1;
-        }
-        else{
-            is_asc = 0;
-        }
-        if (last > cur->value)
+        printf("%d <= %d\n", cur->value, last);
+        if (cur->value <= last)
         {
             is_desc = 1;
         }
-        else{
+        else
+        {
             is_desc = 0;
         }
-
-        if (is_asc == 1 && is_desc == 1)
+        if (is_desc == 0)
         {
-            return 0;
+            break;
         }
-
+        last = cur->value;
         cur = cur->next;
     }
 
-    if (is_asc == 1){
+    cur = l->head;
+    last = cur->value;
+    printf("Descending:\n");
+    while (cur != NULL)
+    {
+        printf("%d >= %d\n", cur->value, last);
+        if (cur->value >= last)
+        {
+            is_asc = 1;
+        }
+        else
+        {
+            is_asc = 0;
+        }
+        if (is_asc == 0)
+        {
+            break;
+        }
+        last = cur->value;
+        cur = cur->next;
+    }
+
+    if (is_asc == 1 && is_desc == 1)
+    {
+        return 0;
+    }
+    if (is_asc == 1 && is_desc == 0)
+    {
         return 1;
     }
-    else if (is_desc == 1){
+    if (is_asc == 0 && is_desc == 1)
+    {
         return 2;
     }
 
-    else{
-        return 0;
+    return 0;
+}
+
+void list_removeDuplicates(List *l)
+{
+    Node *cur1 = l->head;
+    Node *cur2;
+    Node *hold;
+    Node *last2;
+
+    while (cur1 != NULL)
+    {
+        last2 = cur1;
+        cur2 = cur1->next;
+        while (cur2 != NULL)
+        {
+            if (cur1->value == cur2->value)
+            {
+                hold = cur2;
+                last2->next = cur2->next;
+                cur2 = cur2->next;
+                free(hold);
+            }
+            else
+            {
+                last2 = cur2;
+                cur2 = cur2->next;
+            }
+        }
+
+        cur1 = cur1->next;
+    }
+}
+
+void list_printReverse(List* l){
+    Node * cur = l->head;
+    Node * last;
+
+    while (cur != NULL){
+        cur = cur->next;
+    }
+    last = cur;
+    cur = l->head;
+
+    while(cur != last){
+        if (cur->next == last){
+            element_print(last->value);
+            last = cur;
+            cur = l->head;
+        }
+        else{
+            cur = cur->next;
+        }
     }
 }

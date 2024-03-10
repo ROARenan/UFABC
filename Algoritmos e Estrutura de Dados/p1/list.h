@@ -13,5 +13,6 @@ void insertEnd_list(List *l, Element x);
 void list_printElements(List* l1, List* l2);
 bool list_equals(List* l1, List* l2);
 int list_isSorted(List* l);
+void list_removeDuplicates(List *l);
 
 #endif
