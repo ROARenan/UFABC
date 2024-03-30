@@ -22,6 +22,7 @@ server_socket.listen(1)
 #mensagem inicial do servidor
 print("Servidor em execução...")
 print("Escutando por conexões na porta %s" % SERVER_PORT)
+print(f"URL: http://{socket.gethostbyname(socket.gethostname())}:{SERVER_PORT}")
 
 #cria o while que irá receber as conexões
 while True:
@@ -68,5 +69,3 @@ while True:
         client_connection.close()
 
 server_socket.close()
-
-
