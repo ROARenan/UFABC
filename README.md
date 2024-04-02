@@ -10,7 +10,7 @@ Esse comando é utilizado para baixar repositórios existentes, seja no GitHub o
 git clone <url_do_projeto>
 
 # Exemplo
-git clone https://github.com/guscsales/thon-ui.git
+git clone https://github.com/user/repositorio
 ```
 
 ## git init
