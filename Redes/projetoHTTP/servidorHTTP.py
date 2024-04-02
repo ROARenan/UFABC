@@ -2,6 +2,15 @@
 
 import socket
 
+# definicoes de funcoes
+
+def http_get():
+    return "page"
+
+
+def http_put():
+    return "status"
+
 #definindo o endereço IP do host
 SERVER_HOST = ""
 #definindo o número da porta em que o servidor irá escutar pelas requisições HTTP
@@ -40,9 +49,12 @@ while True:
         
         #analisa a solicitação HTTP
         headers = request.split("\n")
+        print(headers)
         #print(headers)#impressão dos cabeçalhos
         #pega o nome do arquivo sendo solicitado
         filename = headers[0].split()[1]
+        method = headers[0].split()[0]
+        #print(method)
 
         #verifica qual arquivo está sendo solicitado e envia a resposta para o cliente
         if filename == "/":
