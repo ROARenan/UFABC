@@ -143,7 +143,12 @@ Node *nodeRemove(Node *cur, const char *email)
         cur->right = nodeRemove(cur->right, email);
     else
     {
-        if (cur->left == NULL)
+        if (cur->left == NULL && cur->right == NULL)
+        {
+            free(cur);
+            return NULL;
+        }
+        else if (cur->left == NULL)
         {
             Node *temp = cur->right;
             free(cur);
@@ -210,7 +215,6 @@ void auxPreOrder(Node *cur)
         auxPreOrder(cur->right);
     }
 }
-
 void db_printPreOrder(Database *db)
 {
     if (db->root == NULL)
@@ -226,8 +230,10 @@ void db_printPreOrder(Database *db)
 
 void auxInOrder(Node *cur)
 {
+    printf("imprimindo\n");
     if (cur != NULL)
     {
+        printf("cur != NULL\n");
         auxInOrder(cur->left);
         user_print(cur->user);
     }
@@ -237,7 +243,6 @@ void auxInOrder(Node *cur)
         user_print(cur->left->user);
     }
 }
-
 void db_printInOrder(Database *db)
 {
     if (db->root == NULL)
