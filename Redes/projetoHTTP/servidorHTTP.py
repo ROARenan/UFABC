@@ -6,7 +6,6 @@ DB_FILE = "sample_database.db"
 
 # definicoes de funcoes
 
-
 def http_get(page_ref: str, client_connection):
     try:
         # abrir o arquivo e enviar para o cliente
@@ -57,6 +56,22 @@ def recvall(sock):
             break
     return data
 
+def extract_put_body(request):
+    lines = request.split("\n")
+    
+    body = ""
+
+    for line in lines:
+        if line.startswith("Content-Length:"):
+            content_length = int(line.split(": ")[1])
+            break
+
+    body_index = request.find("\r\n\r\n") + 4
+
+    body = request[body_index:]
+    
+    return body
+
 # definindo o endereço IP do host
 SERVER_HOST = ""
 SERVER_PORT = 8080
@@ -104,7 +119,8 @@ while True:
             http_get(filename, client_connection)
         elif method == "PUT":
             print("Solicitacao PUT recebida")
+            body = extract_put_body(request)
             http_put(
-                "new_HTML.html", "Test")
+                "new_HTML.html", body)
 
 server_socket.close()
