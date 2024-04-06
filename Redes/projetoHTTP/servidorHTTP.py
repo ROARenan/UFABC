@@ -1,11 +1,86 @@
 import socket
 import os
+import random
 
 # globais
 DB_FILE = "sample_database.db"
 
 # definicoes de funcoes
 
+def gerar_pagina_index(diretorio):
+    # Lista os arquivos na pasta htdocs
+    arquivos = os.listdir(diretorio)
+
+    # Filtra apenas os arquivos HTML e ordena-os em ordem alfabética
+    arquivos_html = sorted([arquivo for arquivo in arquivos if arquivo.endswith('.html')])
+
+    # Inicializa o conteúdo HTML com o estilo CSS
+    html_content = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Menu Principal</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 0;
+            }
+            #menu {
+                background-color: #333;
+                padding: 20px;
+                color: white;
+            }
+            #menu ul {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+            }
+            #menu ul li {
+                display: inline;
+                margin-right: 20px;
+            }
+            #menu ul li a {
+                color: white;
+                text-decoration: none;
+            }
+            #menu ul li a:hover {
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="menu">
+            <h1>Menu Principal</h1>
+            <ul>
+    """
+
+    # Adiciona os links ao menu em ordem alfabética
+    for arquivo in arquivos_html:
+        html_content += f"<li><a href='{arquivo}'>{arquivo}</a></li>"
+    
+    # Adiciona a opção "Sortear Imagem" ao menu
+    html_content += """
+            <li><a href='/sortear_imagem'>Sortear Imagem</a></li>
+    """
+
+    # Fecha as tags HTML
+    html_content += """
+            </ul>
+        </div>
+    </body>
+    </html>
+    """
+
+    # Salva o arquivo index.html na pasta htdocs
+    with open(os.path.join(diretorio, 'index.html'), 'w') as file:
+        file.write(html_content)
+
+    print("Arquivo index.html gerado com sucesso!")
+    
 def http_get(page_ref: str, client_connection):
     try:
         # abrir o arquivo e enviar para o cliente
@@ -72,6 +147,24 @@ def extract_put_body(request):
     
     return body
 
+def send_image(conn, img_folder):
+    try:
+        img_files = [f for f in os.listdir(img_folder) if os.path.isfile(os.path.join(img_folder, f))]
+        if not img_files:
+            print(f"Nenhuma imagem encontrada na pasta {img_folder}.")
+            return
+
+        img_filename = random.choice(img_files)
+        img_path = os.path.join(img_folder, img_filename)
+
+        with open(img_path, 'rb') as file:
+            data = file.read()
+            conn.sendall(data)
+
+        print(f"Imagem {img_filename} enviada com sucesso.")
+    except FileNotFoundError:
+        print(f"Erro: Arquivo {img_filename} não encontrado.")
+
 # definindo o endereço IP do host
 SERVER_HOST = ""
 SERVER_PORT = 8080
@@ -90,6 +183,7 @@ print("Escutando por conexões na porta %s" % SERVER_PORT)
 
 while True:
     # espera por conexões
+    gerar_pagina_index('htdocs')
     client_connection, client_address = server_socket.accept()
 
     request = recvall(client_connection).decode()
