@@ -4,6 +4,7 @@ import random
 
 # globais
 DB_FILE = "sample_database.db"
+IMG_FOLDER = "img"  # Pasta onde as imagens estão localizadas
 
 # definicoes de funcoes
 
@@ -64,13 +65,34 @@ def gerar_pagina_index(diretorio):
     
     # Adiciona a opção "Sortear Imagem" ao menu
     html_content += """
-            <li><a href='/sortear_imagem'>Sortear Imagem</a></li>
+            <li><button id="sortearBtn">Sortear Imagem</button></li>
     """
 
     # Fecha as tags HTML
     html_content += """
             </ul>
         </div>
+        <!-- Elemento para exibir a imagem sorteada -->
+        <img id="imagemSorteada" src="" style="display: none;">
+        <script>
+            // Adiciona um evento de clique ao botão "Sortear Imagem"
+            document.getElementById("sortearBtn").addEventListener("click", function() {
+                // Cria uma nova requisição GET para o servidor
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/sortear_imagem");
+                xhr.responseType = "blob";  // Especifica que a resposta será uma imagem
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        // Se a requisição foi bem-sucedida, exibe a imagem sorteada
+                        var blob = xhr.response;
+                        var url = URL.createObjectURL(blob);
+                        document.getElementById("imagemSorteada").src = url;
+                        document.getElementById("imagemSorteada").style.display = "block";  // Exibe a imagem
+                    }
+                };
+                xhr.send();
+            });
+        </script>
     </body>
     </html>
     """
@@ -83,23 +105,23 @@ def gerar_pagina_index(diretorio):
     
 def http_get(page_ref: str, client_connection):
     try:
-        # abrir o arquivo e enviar para o cliente
-        fin = open("htdocs" + page_ref)
-        # leio o conteúdo do arquivo para uma variável
-        content = fin.read()
-        # fecho o arquivo
-        fin.close()
-        # envia a resposta
-        response = "HTTP/1.1 200 OK\n\n" + content
+        if page_ref == "/sortear_imagem":
+            # Se a requisição for para sortear uma imagem
+            send_image(client_connection, IMG_FOLDER)
+            return  # Não fecha a conexão aqui, pois send_image já fecha
+        else:
+            # Se a requisição for para outro arquivo
+            fin = open("htdocs" + page_ref, 'rb')
+            content = fin.read()
+            fin.close()
+            response = "HTTP/1.1 200 OK\n\n".encode() + content
+            client_connection.sendall(response)
 
     except FileNotFoundError:
-        # caso o arquivo solicitado não exista no servidor, gera uma resposta de erro
-        response = "HTTP/1.1 404 NOT FOUND\n\n<h1>ERROR 404!<br>File Not Found!</h1>"
-
-    client_connection.sendall(response.encode())
+        response = "HTTP/1.1 404 NOT FOUND\n\n<h1>ERROR 404!<br>File Not Found!</h1>".encode()
+        client_connection.sendall(response)
 
     client_connection.close()
-
     return True
 
 
@@ -116,7 +138,6 @@ def http_put(filename: str, body: str):
         response = "HTTP/1.1 404 NOT FOUND\n\n<h1>ERROR 404!<br>File Not Found!</h1>"
 
     client_connection.sendall(response.encode())
-
     client_connection.close()
 
     return response
@@ -132,16 +153,16 @@ def recvall(sock):
     return data
 
 def extract_put_body(request):
-    lines = request.split("\n")
+    lines = request.split(b"\n")
     
-    body = ""
+    body = b""
 
     for line in lines:
-        if line.startswith("Content-Length:"):
-            content_length = int(line.split(": ")[1])
+        if line.startswith(b"Content-Length:"):
+            content_length = int(line.split(b": ")[1])
             break
 
-    body_index = request.find("\r\n\r\n") + 4
+    body_index = request.find(b"\r\n\r\n") + 4
 
     body = request[body_index:]
     
@@ -214,7 +235,6 @@ while True:
         elif method == "PUT":
             print("Solicitacao PUT recebida")
             body = extract_put_body(request)
-            http_put(
-                "new_HTML.html", body)
+            http_put("new_HTML.html", body)
 
 server_socket.close()
