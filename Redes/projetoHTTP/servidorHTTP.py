@@ -8,12 +8,14 @@ IMG_FOLDER = "htdocs/img"  # Pasta onde as imagens estão localizadas
 
 # definicoes de funcoes
 
+
 def gerar_pagina_index(diretorio):
     # Lista os arquivos na pasta htdocs
     arquivos = os.listdir(diretorio)
 
     # Filtra apenas os arquivos HTML e ordena-os em ordem alfabética
-    arquivos_html = sorted([arquivo for arquivo in arquivos if arquivo.endswith('.html')])
+    arquivos_html = sorted(
+        [arquivo for arquivo in arquivos if arquivo.endswith('.html')])
 
     # Inicializa o conteúdo HTML com o estilo CSS
     html_content = """
@@ -51,6 +53,13 @@ def gerar_pagina_index(diretorio):
             #menu ul li a:hover {
                 text-decoration: underline;
             }
+                    #sample_img {
+            text-align: center;
+        }
+        #sample_img img {
+            width: 100%;
+            height: auto;
+        }
         </style>
     </head>
     <body>
@@ -67,6 +76,11 @@ def gerar_pagina_index(diretorio):
     html_content += """
             </ul>
         </div>
+        <div id= "sample_img">
+        <p>
+        <img src="img/nrede_gif.gif" alt="Example Image">
+        </p>
+        </div>
     </body>
     </html>
     """
@@ -76,7 +90,8 @@ def gerar_pagina_index(diretorio):
         file.write(html_content)
 
     print("Arquivo index.html gerado com sucesso!")
-    
+
+
 def http_get(page_ref: str, client_connection):
     try:
         if page_ref == "/images_generate.html":
@@ -87,7 +102,7 @@ def http_get(page_ref: str, client_connection):
                 fin.close()
                 response = "HTTP/1.1 200 OK\n\n".encode() + content
                 client_connection.sendall(response)
-            
+
         else:
             fin = open("htdocs" + page_ref, 'rb')
             content = fin.read()
@@ -101,6 +116,7 @@ def http_get(page_ref: str, client_connection):
 
     client_connection.close()
     return True
+
 
 def http_put(filename: str, body: str):
     try:
@@ -119,6 +135,7 @@ def http_put(filename: str, body: str):
 
     return response
 
+
 def recvall(sock):
     BUFF_SIZE = 4096
     data = b''
@@ -129,9 +146,10 @@ def recvall(sock):
             break
     return data
 
+
 def extract_put_body(request):
     lines = request.split("\n")
-    
+
     body = b""
 
     for line in lines:
@@ -142,14 +160,14 @@ def extract_put_body(request):
     body_index = request.find("\r\n\r\n") + 4
 
     body = request[body_index:]
-    
-    return body
 
+    return body
 
 
 def generate_html_with_image(img_folder):
     try:
-        img_files = [f for f in os.listdir(img_folder) if os.path.isfile(os.path.join(img_folder, f))]
+        img_files = [f for f in os.listdir(
+            img_folder) if os.path.isfile(os.path.join(img_folder, f))]
         if not img_files:
             print(f"Nenhuma imagem encontrada na pasta {img_folder}.")
             return ""

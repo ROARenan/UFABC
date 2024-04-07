@@ -1,63 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Documentação do Servidor</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            padding: 20px;
-        }
-        h1 {
-            color: #333;
-            border-bottom: 1px solid #ccc;
-        }
-        h2 {
-            color: #555;
-            margin-top: 30px;
-        }
-        p {
-            color: #777;
-        }
-        code {
-            background-color: #f4f4f4;
-            padding: 4px 6px;
-            border-radius: 4px;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        padding: 20px;
+      }
+      h1 {
+        color: #333;
+        border-bottom: 1px solid #ccc;
+      }
+      h2 {
+        color: #555;
+        margin-top: 30px;
+      }
+      p {
+        color: #777;
+      }
+      code {
+        background-color: #f4f4f4;
+        padding: 4px 6px;
+        border-radius: 4px;
+      }
+      footer {
+        margin-top: 50px;
+        border-top: 1px solid #ccc;
+        padding-top: 20px;
+        text-align: center;
+        color: #777;
+        font-size: small;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Documentação do Servidor</h1>
-    
+
     <h2>Objetivo</h2>
-    <p>O servidor foi criado para fornecer acesso a arquivos HTML na pasta <code>htdocs</code> e permitir a escrita de novos arquivos HTML através do método PUT.</p>
-    
+    <p>
+      O servidor foi criado para fornecer acesso a arquivos HTML na pasta
+      <code>htdocs</code> e permitir a escrita de novos arquivos HTML através do
+      método PUT.
+    </p>
+
     <h2>Funcionamento</h2>
     <p>O servidor utiliza os seguintes métodos:</p>
     <ul>
-        <li><strong>GET:</strong> Para recuperar arquivos HTML existentes.</li>
-        <li><strong>PUT:</strong> Para escrever novos arquivos HTML.</li>
+      <li><strong>GET:</strong> Para recuperar arquivos HTML existentes.</li>
+      <li><strong>PUT:</strong> Para escrever novos arquivos HTML.</li>
     </ul>
-    
+
+    <h2>Funções Principais</h2>
+    <p>O servidor utiliza as seguintes funções principais:</p>
+    <ul>
+      <li>
+        <code>gerar_pagina_index</code>: Gera a página index.html com links para
+        outras páginas.
+      </li>
+      <li><code>http_get</code>: Lida com solicitações GET.</li>
+      <li><code>http_put</code>: Lida com solicitações PUT.</li>
+      <li><code>recvall</code>: Recebe todos os dados de uma conexão.</li>
+      <li>
+        <code>extract_put_body</code>: Extrai o corpo de uma solicitação PUT.
+      </li>
+      <li>
+        <code>generate_html_with_image</code>: Gera uma página HTML com uma
+        imagem aleatória.
+      </li>
+    </ul>
+
     <h2>Uso</h2>
     <p>Para utilizar o servidor, siga as instruções abaixo:</p>
     <ol>
-        <li>Execute o código Python para iniciar o servidor.</li>
-        <li>Coloque os arquivos HTML que deseja servir na pasta <code>htdocs</code>.</li>
-        <li>Para acessar um arquivo, utilize a URL no formato <code>http://localhost:8080/nome_do_arquivo.html</code>.</li>
-        <li>Para escrever um novo arquivo HTML, envie uma requisição PUT contendo o conteúdo HTML desejado.</li>
+      <li>Execute o código Python para iniciar o servidor.</li>
+      <li>
+        Coloque os arquivos HTML que deseja servir na pasta <code>htdocs</code>.
+      </li>
+      <li>
+        Para acessar um arquivo, utilize a URL no formato
+        <code>http://localhost:8080/nome_do_arquivo.html</code>.
+      </li>
+      <li>
+        Para escrever um novo arquivo HTML, envie uma requisição PUT contendo o
+        conteúdo HTML desejado.
+      </li>
     </ol>
-    
+
     <h2>Exemplo de Uso</h2>
     <p>Para recuperar o arquivo <code>index.html</code>:</p>
     <pre><code>GET /index.html HTTP/1.1</code></pre>
-    
-    <p>Para escrever um novo arquivo HTML chamado <code>novo.html</code> com o conteúdo <code>&lt;h1&gt;Novo Arquivo&lt;/h1&gt;</code>:</p>
+
+    <p>
+      Para escrever um novo arquivo HTML chamado <code>novo.html</code> com o
+      conteúdo <code>&lt;h1&gt;Novo Arquivo&lt;/h1&gt;</code>:
+    </p>
     <pre><code>PUT /novo.html HTTP/1.1
 Content-Length: 24
 
 &lt;h1&gt;Novo Arquivo&lt;/h1&gt;</code></pre>
-</body>
+
+    <h2>Funcionalidades Adicionais</h2>
+    <p>O servidor também possui as seguintes funcionalidades:</p>
+    <ul>
+      <li>
+        <strong>Geração de Página Index:</strong> Automaticamente cria uma
+        página index.html com links para todas as outras páginas disponíveis na
+        pasta <code>htdocs</code>.
+      </li>
+      <li>
+        <strong>Geração de Páginas com Imagens:</strong> Capaz de gerar páginas
+        HTML com imagens aleatórias a partir de arquivos presentes na pasta
+        <code>htdocs/img</code>.
+      </li>
+    </ul>
+
+    <footer>
+      <p>
+        Feito por Renan Santana Ferreira<br />RA: 11202131332<br />E-mail:
+        <a href="mailto:santana.renan@aluno.ufabc.edu.br"
+          >santana.renan@aluno.ufabc.edu.br</a
+        >
+      </p>
+    </footer>
+  </body>
 </html>
