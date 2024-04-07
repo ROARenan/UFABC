@@ -4,7 +4,7 @@ import random
 
 # globais
 DB_FILE = "sample_database.db"
-IMG_FOLDER = "img"  # Pasta onde as imagens estão localizadas
+IMG_FOLDER = "htdocs/img"  # Pasta onde as imagens estão localizadas
 
 # definicoes de funcoes
 
@@ -62,37 +62,11 @@ def gerar_pagina_index(diretorio):
     # Adiciona os links ao menu em ordem alfabética
     for arquivo in arquivos_html:
         html_content += f"<li><a href='{arquivo}'>{arquivo}</a></li>"
-    
-    # Adiciona a opção "Sortear Imagem" ao menu
-    html_content += """
-            <li><button id="sortearBtn">Sortear Imagem</button></li>
-    """
 
     # Fecha as tags HTML
     html_content += """
             </ul>
         </div>
-        <!-- Elemento para exibir a imagem sorteada -->
-        <img id="imagemSorteada" src="" style="display: none;">
-        <script>
-            // Adiciona um evento de clique ao botão "Sortear Imagem"
-            document.getElementById("sortearBtn").addEventListener("click", function() {
-                // Cria uma nova requisição GET para o servidor
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", "/sortear_imagem");
-                xhr.responseType = "blob";  // Especifica que a resposta será uma imagem
-                xhr.onload = function() {
-                    if (xhr.status === 200) {
-                        // Se a requisição foi bem-sucedida, exibe a imagem sorteada
-                        var blob = xhr.response;
-                        var url = URL.createObjectURL(blob);
-                        document.getElementById("imagemSorteada").src = url;
-                        document.getElementById("imagemSorteada").style.display = "block";  // Exibe a imagem
-                    }
-                };
-                xhr.send();
-            });
-        </script>
     </body>
     </html>
     """
@@ -105,12 +79,16 @@ def gerar_pagina_index(diretorio):
     
 def http_get(page_ref: str, client_connection):
     try:
-        if page_ref == "/sortear_imagem":
-            # Se a requisição for para sortear uma imagem
-            send_image(client_connection, IMG_FOLDER)
-            return  # Não fecha a conexão aqui, pois send_image já fecha
+        if page_ref == "/images_generate.html":
+            # Se a requisição for para gerar uma imagem
+            if False != generate_html_with_image(IMG_FOLDER):
+                fin = open("htdocs" + page_ref, 'rb')
+                content = fin.read()
+                fin.close()
+                response = "HTTP/1.1 200 OK\n\n".encode() + content
+                client_connection.sendall(response)
+            
         else:
-            # Se a requisição for para outro arquivo
             fin = open("htdocs" + page_ref, 'rb')
             content = fin.read()
             fin.close()
@@ -123,7 +101,6 @@ def http_get(page_ref: str, client_connection):
 
     client_connection.close()
     return True
-
 
 def http_put(filename: str, body: str):
     try:
@@ -153,38 +130,54 @@ def recvall(sock):
     return data
 
 def extract_put_body(request):
-    lines = request.split(b"\n")
+    lines = request.split("\n")
     
     body = b""
 
     for line in lines:
-        if line.startswith(b"Content-Length:"):
-            content_length = int(line.split(b": ")[1])
+        if line.startswith("Content-Length:"):
+            content_length = int(line.split(": ")[1])
             break
 
-    body_index = request.find(b"\r\n\r\n") + 4
+    body_index = request.find("\r\n\r\n") + 4
 
     body = request[body_index:]
     
     return body
 
-def send_image(conn, img_folder):
+
+
+def generate_html_with_image(img_folder):
     try:
         img_files = [f for f in os.listdir(img_folder) if os.path.isfile(os.path.join(img_folder, f))]
         if not img_files:
             print(f"Nenhuma imagem encontrada na pasta {img_folder}.")
-            return
+            return ""
 
         img_filename = random.choice(img_files)
         img_path = os.path.join(img_folder, img_filename)
 
-        with open(img_path, 'rb') as file:
-            data = file.read()
-            conn.sendall(data)
+        html = f"""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Simple Image Example</title>
+        </head>
+        <body>
+            <h1>Simple Image Example</h1>
+            <img src="{img_path}" alt="{img_filename}">
+        </body>
+        </html>
+        """
 
-        print(f"Imagem {img_filename} enviada com sucesso.")
+        print(f"HTML com imagem {img_filename} gerado com sucesso.")
+        return img_filename
     except FileNotFoundError:
         print(f"Erro: Arquivo {img_filename} não encontrado.")
+        return False
+
 
 # definindo o endereço IP do host
 SERVER_HOST = ""
@@ -235,6 +228,6 @@ while True:
         elif method == "PUT":
             print("Solicitacao PUT recebida")
             body = extract_put_body(request)
-            http_put("new_HTML.html", body)
+            http_put("put_HTML.html", body)
 
 server_socket.close()

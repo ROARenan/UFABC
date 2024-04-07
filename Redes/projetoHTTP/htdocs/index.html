@@ -39,32 +39,9 @@
         <div id="menu">
             <h1>Menu Principal</h1>
             <ul>
-    <li><a href='documentation.html'>documentation.html</a></li><li><a href='index.html'>index.html</a></li><li><a href='ipsum.html'>ipsum.html</a></li><li><a href='new.html'>new.html</a></li><li><a href='new_HTML.html'>new_HTML.html</a></li>
-            <li><button id="sortearBtn">Sortear Imagem</button></li>
-    
+    <li><a href='documentation.html'>documentation.html</a></li><li><a href='images_generate.html'>images_generate.html</a></li><li><a href='index.html'>index.html</a></li><li><a href='ipsum.html'>ipsum.html</a></li><li><a href='put_HTML.html'>put_HTML.html</a></li>
             </ul>
         </div>
-        <!-- Elemento para exibir a imagem sorteada -->
-        <img id="imagemSorteada" src="" style="display: none;">
-        <script>
-            // Adiciona um evento de clique ao botão "Sortear Imagem"
-            document.getElementById("sortearBtn").addEventListener("click", function() {
-                // Cria uma nova requisição GET para o servidor
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", "/sortear_imagem");
-                xhr.responseType = "blob";  // Especifica que a resposta será uma imagem
-                xhr.onload = function() {
-                    if (xhr.status === 200) {
-                        // Se a requisição foi bem-sucedida, exibe a imagem sorteada
-                        var blob = xhr.response;
-                        var url = URL.createObjectURL(blob);
-                        document.getElementById("imagemSorteada").src = url;
-                        document.getElementById("imagemSorteada").style.display = "block";  // Exibe a imagem
-                    }
-                };
-                xhr.send();
-            });
-        </script>
     </body>
     </html>
     
